@@ -61,6 +61,13 @@ public abstract class Account {
     }
 
     /**
+     * Gibt die Bezeichnung des Kontotyps zurück.
+     *
+     * @return der Kontotyp, z.B. "Sparkonto"
+     */
+    public abstract String getAccountType();
+
+    /**
      * Gibt die Buchungen als unveränderbare Liste zurück.
      *
      * @return die Buchungen (nur lesbar)

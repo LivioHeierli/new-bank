@@ -28,11 +28,11 @@ task. Write the test, watch it fail (`./mvnw test`), then implement just enough 
 
 ## Sprint 3 — Specific accounts ([`docs/exercises/03-Exercise-specific-accounts.md`](docs/exercises/03-Exercise-specific-accounts.md))
 
-- [ ] Tests written first: `SalaryAccountTests`, `SavingsAccountTests`, new `PromoYouthSavingsAccountTests` (they won't compile until the classes below exist — that's expected).
-- [ ] `ch.bbw.accounts.SalaryAccount` created (`creditLimit`, overdraft-to-limit rule, rejects positive limit).
-- [ ] `ch.bbw.accounts.PromoYouthSavingsAccount` created, with its own rule (withdrawal cap / bonus rate / minimum balance) and a documented superclass choice.
-- [ ] `Account` gets a shared abstract operation (e.g. `getAccountType()` or `applyInterest(...)`) that every subtype implements.
-- [ ] `Bank` verified to stay polymorphic — no `instanceof`, no cast to a concrete account type.
+- [x] Tests written first: `SalaryAccountTests`, `SavingsAccountTests`, new `PromoYouthSavingsAccountTests` (they won't compile until the classes below exist — that's expected).
+- [x] `ch.bbw.accounts.SalaryAccount` created (`creditLimit`, overdraft-to-limit rule, rejects positive limit).
+- [x] `ch.bbw.accounts.PromoYouthSavingsAccount` created, with its own rule (withdrawal cap / bonus rate / minimum balance) and a documented superclass choice.
+- [x] `Account` gets a shared abstract operation (e.g. `getAccountType()` or `applyInterest(...)`) that every subtype implements.
+- [x] `Bank` verified to stay polymorphic — no `instanceof`, no cast to a concrete account type.
 
 ## Sprint 4 — Factory pattern ([`docs/exercises/04-Exercise-factory-pattern.md`](docs/exercises/04-Exercise-factory-pattern.md))
 

@@ -163,12 +163,12 @@ short it is.
 
 ## Acceptance criteria
 
-- [ ] `SalaryAccount` and `PromoYouthSavingsAccount` exist under `ch.bbw.accounts`.
-- [ ] `SalaryAccount` honours its `creditLimit` on withdrawal and rejects a positive limit.
-- [ ] `PromoYouthSavingsAccount` has at least one documented rule of its own.
-- [ ] `Account` declares at least one abstract operation the subtypes implement.
-- [ ] `Bank` contains **no** `instanceof` and no cast to a concrete account type.
-- [ ] `./mvnw test` passes, including boundary tests for every subtype.
+- [x] `SalaryAccount` and `PromoYouthSavingsAccount` exist under `ch.bbw.accounts`.
+- [x] `SalaryAccount` honours its `creditLimit` on withdrawal and rejects a positive limit.
+- [x] `PromoYouthSavingsAccount` has at least one documented rule of its own.
+- [x] `Account` declares at least one abstract operation the subtypes implement.
+- [x] `Bank` contains **no** `instanceof` and no cast to a concrete account type.
+- [x] `./mvnw test` passes, including boundary tests for every subtype.
 
 ## Stretch goals (optional)
 

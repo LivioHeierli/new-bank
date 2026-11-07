@@ -40,4 +40,14 @@ public class SavingsAccount extends Account
 
 		return super.withdraw(date, amount, text);
 	}
+
+	/**
+	 * Gibt die Bezeichnung des Kontotyps zurück.
+	 *
+	 * @return "Sparkonto"
+	 */
+	@Override
+	public String getAccountType() {
+		return "Sparkonto";
+	}
 }
