@@ -10,10 +10,11 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.TreeMap;
 
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -189,14 +190,32 @@ public class AccountTests {
 
     @Test
     @DisplayName("TreeMap of two Account-References should work")
-    public void testReferences() {
-        fail("ToDo");
+    public void testReferences() throws Exception {
+        TreeMap<String, Account> accounts = new TreeMap<>();
+        Account savings = new SavingsAccount("S-1");
+        Account salary = new SalaryAccount("P-1", -1000);
+
+        accounts.put(savings.getId(), savings);
+        accounts.put(salary.getId(), salary);
+
+        assertEquals(2, accounts.size());
+        assertSame(savings, accounts.get("S-1"));
+        assertSame(salary, accounts.get("P-1"));
+        assertEquals("P-1", accounts.firstKey());
+
+        // Eine Änderung über die Map-Referenz ist auf dem Konto selbst sichtbar.
+        accounts.get("S-1").deposit(Scheduled.now(), 1000);
+        assertEquals(1000, savings.getBalance());
     }
 
     @Test
-    @DisplayName("TreeMap of two Account-References should work")
+    @DisplayName("A transaction date is valid now, but not in the past")
     public void testCanTransact() {
-        fail("ToDo");
+        Account account = new SavingsAccount("S-1");
+
+        assertFalse(account.isInvalidTransaction(Scheduled.now()));
+        assertFalse(account.isInvalidTransaction(Scheduled.now().plusDays(1)));
+        assertTrue(account.isInvalidTransaction(Scheduled.now().minusDays(1)));
     }
 
     /**
