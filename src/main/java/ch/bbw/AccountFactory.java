@@ -2,6 +2,8 @@ package ch.bbw;
 
 import ch.bbw.accounts.*;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * Die Factory ist der einzige Ort, der entscheidet, welcher konkrete
  * {@link Account}-Typ erzeugt wird und welche Kontonummer er bekommt.
@@ -29,17 +31,26 @@ import ch.bbw.accounts.*;
  * nicht das Factory-Method-Pattern: Es gibt keine Creator-Unterklassen.
  * </p>
  *
+ * <p>
+ * Entscheid zur Id-Vergabe: Der Zähler ist über alle Kontoarten <em>geteilt</em>
+ * ({@code S-1000}, {@code Y-1001}, {@code P-1002}). Dadurch ist die Zahl allein
+ * schon eindeutig und eine Kontonummer lässt sich auch ohne Präfix nicht mit
+ * der eines anderen Kontotyps verwechseln. Der Zähler ist ein {@link AtomicLong},
+ * damit die Factory auch dann eindeutige Ids vergibt, wenn später mehrere
+ * HTTP-Requests gleichzeitig Konten eröffnen.
+ * </p>
+ *
  * @author Luigi Cavuoti, lro@gmx.ch
- * @version 2.0
+ * @version 2.1
  */
 public class AccountFactory {
     /**
-     * Next account id.
+     * Next account id. Thread-safe, shared across all account types.
      */
-    private long nextAccountId;
+    private final AtomicLong nextAccountId;
 
     public AccountFactory() {
-        this.nextAccountId = 1000;
+        this.nextAccountId = new AtomicLong(1000);
     }
 
     /**
@@ -51,7 +62,7 @@ public class AccountFactory {
      * @throws IllegalArgumentException falls die Kreditlimite eines Lohnkontos positiv ist
      */
     public Account create(AccountType type, long creditLimit) {
-        String id = type.prefix() + "-" + nextAccountId++;
+        String id = type.prefix() + "-" + nextAccountId.getAndIncrement();
 
         return switch (type) {
             case SAVINGS -> new SavingsAccount(id);

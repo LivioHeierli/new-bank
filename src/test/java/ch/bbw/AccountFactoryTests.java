@@ -7,8 +7,15 @@ import ch.bbw.accounts.SavingsAccount;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -108,5 +115,36 @@ public class AccountFactoryTests {
         }
 
         assertEquals(1000, ids.size());
+    }
+
+    @Test
+    @DisplayName("Ids should stay unique when several threads create accounts at the same time")
+    public void testIdsAreUniqueAcrossThreads() throws Exception {
+        int threads = 8;
+        int perThread = 500;
+        Set<String> ids = ConcurrentHashMap.newKeySet();
+        ExecutorService pool = Executors.newFixedThreadPool(threads);
+
+        try {
+            List<Future<?>> futures = new ArrayList<>();
+
+            for (int t = 0; t < threads; t++) {
+                Callable<Void> task = () -> {
+                    for (int i = 0; i < perThread; i++) {
+                        ids.add(factory.createSavingsAccount().getId());
+                    }
+                    return null;
+                };
+                futures.add(pool.submit(task));
+            }
+
+            for (Future<?> future : futures) {
+                future.get();
+            }
+        } finally {
+            pool.shutdown();
+        }
+
+        assertEquals(threads * perThread, ids.size());
     }
 }
