@@ -71,6 +71,28 @@ public class AccountFactoryTests {
     }
 
     @Test
+    @DisplayName("create(type, limit) dispatches to the right subtype")
+    public void testCreateDispatchesByType() {
+        assertInstanceOf(SavingsAccount.class, factory.create(AccountType.SAVINGS, 0));
+        assertInstanceOf(PromoYouthSavingsAccount.class, factory.create(AccountType.PROMO_YOUTH, 0));
+
+        SalaryAccount salary = assertInstanceOf(SalaryAccount.class,
+                factory.create(AccountType.SALARY, -2_000));
+        assertEquals(-2_000, salary.getCreditLimit());
+    }
+
+    @Test
+    @DisplayName("Every AccountType produces an id with its own prefix")
+    public void testEveryTypeHasItsPrefix() {
+        for (AccountType type : AccountType.values()) {
+            Account account = factory.create(type, 0);
+
+            assertTrue(account.getId().startsWith(type.prefix() + "-"),
+                    type + " -> " + account.getId());
+        }
+    }
+
+    @Test
     @DisplayName("Ids should be unique over 1000 creations of mixed types")
     public void testIdsAreUnique() {
         Set<String> ids = new HashSet<>();
