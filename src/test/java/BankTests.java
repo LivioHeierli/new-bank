@@ -4,6 +4,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.fail;
 
 
@@ -16,8 +19,18 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class BankTests {
     @Test
     @DisplayName("Constructor Test, creates two SavingsAccounts")
-    public void testCreate() {
-        fail("ToDo");
+    public void testCreate() throws Exception {
+        Bank bank = new Bank();
+
+        String first = bank.createSavingsAccount();
+        String second = bank.createSavingsAccount();
+
+        assertNotNull(first);
+        assertNotNull(second);
+        assertNotEquals(first, second);
+        assertEquals(first, bank.getAccount(first).getId());
+        assertEquals(second, bank.getAccount(second).getId());
+        assertSame(bank.getAccount(first), bank.getAccount(first));
     }
 
     @Test
