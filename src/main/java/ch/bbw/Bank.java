@@ -7,27 +7,67 @@ import ch.bbw.exceptions.*;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.TreeMap;
 
 /**
- * Die Bank.
+ * The bank and its account registry.
+ *
+ * <p>The application-wide bank is exposed through a lazy, thread-safe
+ * initialization-on-demand holder. Eager initialization is also thread-safe,
+ * but creates the instance even when it is never used. A synchronized lazy
+ * accessor is thread-safe too, but pays for synchronization on every call.
+ * The holder idiom is lazy and relies on the JVM's class-initialization
+ * guarantees, so synchronization is needed only during first initialization.
+ * Double-checked locking is unsafe without {@code volatile}: the JVM may
+ * publish the reference before the new object's fields have been initialized.
+ * </p>
+ *
+ * <p>A singleton is defensible because the application models one bank, gives
+ * callers a global access point, and avoids duplicating the account factory's
+ * id sequence. It also introduces a hidden dependency, globally mutable state,
+ * makes test doubles and parallel scenarios harder, and ties the instance's
+ * lifetime to the JVM. One bank object per JVM also does not imply one bank
+ * across multiple service processes.</p>
+ *
+ * <p>Prefer passing a {@code Bank} to collaborators where practical and
+ * obtaining the singleton only at the composition root. The injectable
+ * constructor supports that approach and isolated tests. The package-private
+ * reset method exists only to clean up singleton state in tests; needing it is
+ * a design smell, not a production lifecycle solution. Singleton creation is
+ * thread-safe, but the mutable account registry itself is not.</p>
  *
  * @author luigicavuoti, lro@gmx.ch
  * @version 2.1
  */
 public class Bank {
+    private static class Holder {
+        private static final Bank INSTANCE = new Bank(new AccountFactory());
+    }
+
     /**
      * Liste aller Konti.
      */
     private final TreeMap<String, Account> accounts;
     private final AccountFactory accountFactory;
-    /**
-     * Initialisiert eine neue Bank.
-     */
-    public Bank() {
+
+    Bank(AccountFactory accountFactory) {
         this.accounts = new TreeMap<String, Account>();
-        accountFactory = new AccountFactory();
+        this.accountFactory = Objects.requireNonNull(accountFactory, "accountFactory");
+    }
+
+    /**
+     * Returns the application-wide bank instance.
+     *
+     * @return the shared bank
+     */
+    public static Bank getInstance() {
+        return Holder.INSTANCE;
+    }
+
+    static void resetForTesting() {
+        getInstance().accounts.clear();
     }
 
     /**
