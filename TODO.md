@@ -1,8 +1,7 @@
 # Progress checklist
 
 Personal tracking file — what's actually done in the code vs. what each exercise still asks for.
-Last checked against the code: 2026-09-13 (all 19 tests still `fail("ToDo")`,
-`./mvnw test` → `Tests run: 19, Failures: 19, Errors: 0`).
+Last checked against the code: 2026-11-08 (no `fail("ToDo")` left, `./mvnw test` is green).
 
 Update this file whenever you finish a task below — that's the whole point of it.
 
@@ -37,13 +36,13 @@ task. Write the test, watch it fail (`./mvnw test`), then implement just enough 
 ## Sprint 4 — Factory pattern ([`docs/exercises/04-Exercise-factory-pattern.md`](docs/exercises/04-Exercise-factory-pattern.md))
 
 - [x] Id generation with type prefixes (`S-`/`Y-`/`P-`) and a counter starting at 1000 — *this is the exercise's own starting point, not something to redo.*
-- [ ] Tests written first: `src/test/java/ch/bbw/AccountFactoryTests.java` (should fail against the current buggy factory), `BankTests.testCreate()`.
-- [ ] **Bug still open:** `createPromoYouthSavingsAccount()` and `createSalaryAccount(long)` in `AccountFactory` still both return a plain `SavingsAccount` — fix to return the real subtypes (needs Sprint 3 done first).
-- [ ] `creditLimit` actually passed into `SalaryAccount`'s constructor instead of discarded.
-- [ ] `AccountType` enum introduced (type + prefix together).
-- [ ] Single dispatching `create(AccountType, long)` entry point added, with a documented answer to the API-choice question.
-- [ ] Id counter made thread-safe (`AtomicLong`) or the single-threaded assumption documented.
-- [ ] `Bank` confirmed to not import/instantiate any concrete account class.
+- [x] Tests written first: `src/test/java/ch/bbw/AccountFactoryTests.java` (should fail against the current buggy factory), `BankTests.testCreate()`.
+- [x] **Bug still open:** `createPromoYouthSavingsAccount()` and `createSalaryAccount(long)` in `AccountFactory` still both return a plain `SavingsAccount` — fix to return the real subtypes (needs Sprint 3 done first).
+- [x] `creditLimit` actually passed into `SalaryAccount`'s constructor instead of discarded.
+- [x] `AccountType` enum introduced (type + prefix together).
+- [x] Single dispatching `create(AccountType, long)` entry point added, with a documented answer to the API-choice question.
+- [x] Id counter made thread-safe (`AtomicLong`) or the single-threaded assumption documented.
+- [x] `Bank` confirmed to not import/instantiate any concrete account class.
 
 ## Sprint 5 — Singleton ([`docs/exercises/05-Exercise-singleton-pattern.md`](docs/exercises/05-Exercise-singleton-pattern.md))
 
